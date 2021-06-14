@@ -61,8 +61,7 @@
                 <td><img src="/img/<?= $k['cover']; ?>" alt="" class="image-cover"></td>
                 <td><?= $k['title']; ?></td>
                 <td>
-                  <a href="" class="btn">detail</a>
-                  <a href="" class="btn">delete</a>
+                  <a href="/komik/<?= $k['slug']; ?>" class="btn">detail</a>
                 </td>
               </tr>
               <?php endforeach; ?>
