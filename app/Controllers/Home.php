@@ -6,22 +6,22 @@ class Home extends BaseController
 {
 	public function index()
 	{
-		echo view('layout/header');
-		echo view('pages/home');
-		echo view('layout/footer');
+		$data = [
+			'title' => 'home'
+		];
+		return view('pages/home', $data);
 	}
 
 	public function about ()
 	{
-		echo view('layout/header');
-		echo view('pages/about');
-		echo view('layout/footer');
+		$data = [
+			'title' => 'about'
+		];
+		return view('pages/about', $data);
 	}
 	
 	public function contact ()
 	{
-		echo view('layout/header');
 		return view('pages/contact');
-		echo view('layout/footer');
 	}
 }
