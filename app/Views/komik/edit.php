@@ -52,9 +52,10 @@
     <div class="container">
       <div class="row">
         <div class="p-4 my-3 col-md-12 content">
-          <form action="/komik/update/<?= $komik['id']; ?>" method="post">
+          <form action="/komik/update/<?= $komik['id']; ?>" method="post" enctype="multipart/form-data">
             <?= csrf_field(); ?> 
             <input type="hidden" name="slug" value="<?= $komik['slug']; ?>">
+            <input type="hidden" name="oldCover" value="<?= $komik['cover']; ?>">
             <div class="mb-3">
               <label for="title" class="form-label">Comic Title</label>
               <input type="text" class="form-control <?= ($validation->hasError('title'))? 'is-invalid' : ''; ?>" id="title" name="title" aria-describedby="emailHelp" autofocus value="<?= (old('title')) ? old('title') : $komik['title'] ?>">
@@ -72,7 +73,15 @@
             </div>
             <div class="mb-3">
               <label for="cover" class="form-label">Cover</label>
-              <input type="text" class="form-control" id="cover" name="cover" aria-describedby="emailHelp" value="<?= (old('cover')) ? old('cover') :$komik['cover']; ?>">
+              <div class="col-sm-4">
+                <img src="/img/<?= $komik['cover']; ?>" alt="" class="img-thumbnail img-preview">
+              </div>
+              <div class="mb-3 input-group">
+              <input type="file" class="form-control <?= ($validation->hasError('cover'))? 'is-invalid' : ''; ?>" id="cover" name="cover" onchange="previewImg()">
+              <div class="invalid-feedback">
+                <?= $validation->getError('cover'); ?>
+              </div>
+              <label class="input-group-text" for="cover"><?= $komik['cover']; ?></label>
             </div>
             <button type="submit" class="btn">Edit</button>
           </form>
