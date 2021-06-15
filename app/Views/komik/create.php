@@ -52,7 +52,7 @@
     <div class="container">
       <div class="row">
         <div class="p-4 my-3 col-md-12 content">
-          <form action="/komik/save" method="post">
+          <form action="/komik/save" method="post" enctype="multipart/form-data">
             <?= csrf_field(); ?> 
             <div class="mb-3">
               <label for="title" class="form-label">Comic Title</label>
@@ -71,7 +71,16 @@
             </div>
             <div class="mb-3">
               <label for="cover" class="form-label">Cover</label>
-              <input type="text" class="form-control" id="cover" name="cover" aria-describedby="emailHelp" value="<?= old('cover'); ?>">
+              <div class="col-sm-4">
+                <img src="/img/naruto-cover.jpg" alt="" class="img-thumbnail img-preview">
+              </div>
+              <div class="mb-3 input-group">
+              <input type="file" class="form-control <?= ($validation->hasError('cover'))? 'is-invalid' : ''; ?>" id="cover" name="cover" onchange="previewImg()">
+              <div class="invalid-feedback">
+                <?= $validation->getError('cover'); ?>
+              </div>
+              <label class="input-group-text" for="cover">Choose Cover</label>
+            </div>
             </div>
             <button type="submit" class="btn">Submit</button>
           </form>

@@ -59,9 +59,31 @@ class Komik extends BaseController
           'is_unique' => 'Comic {field} must be unique',
         ]
       ],
+      'cover' => [
+        'rules' => 'max_size[cover,1024]|is_image[cover]|mime_in[cover,image/jpg,image/jpeg,image/png]',
+        'errors' => [
+          'max_size' => 'Cover size is too big',
+          'is_image' => 'Uploaded file is not an image',
+          'mime_in' => 'Uploaded file is not an image',
+
+        ]
+      ]
     ])) {
-      $validation = \Config\Services::validation();
-      return redirect()->to('/komik/create')->withInput()->with('validation', $validation);
+      // $validation = \Config\Services::validation();
+      // return redirect()->to('/komik/create')->withInput()->with('validation', $validation);
+      return redirect()->to('/komik/create')->withInput();
+    }
+
+    // ambil gambar
+    $fileCover = $this->request->getFile('cover');
+    // tidak ada gambar yg di upload
+    if($fileCover->getError() == 4){
+      $namaCover = 'naruto-cover.jpg';
+    } else {
+      // generate nama sampul random
+      $namaCover = $fileCover->getRandomName();
+      // pindahkan file ke folder img
+      $fileCover->move('img', $namaCover);
     }
 
     $slug = url_title($this->request->getVar('title'), '-', true);
@@ -70,7 +92,7 @@ class Komik extends BaseController
       'slug' => $slug,
       'author' => $this->request->getVar('author'), 
       'publisher' => $this->request->getVar('publisher'), 
-      'cover' => $this->request->getVar('cover'), 
+      'cover' => $namaCover, 
     ]);
 
     session()->setFlashData('message', 'Comic inserted succesfully.');
@@ -80,6 +102,17 @@ class Komik extends BaseController
 
   public function delete($id)
   {
+
+    // cari gambar berdasarkan id
+    $komik = $this->komikModel->find($id);
+
+    //
+    if($komik['cover'] != 'naruto-cover.jpg'){
+      // hapus gambar
+      unlink('img/' . $komik['cover']);
+    }
+
+
     $this->komikModel->delete($id);
     session()->setFlashdata('message', 'Comic deleted succesfully.');
     return redirect()->to('/komik');
@@ -114,10 +147,30 @@ class Komik extends BaseController
           'is_unique' => 'Comic {field} must be unique',
         ]
       ],
+      'cover' => [
+        'rules' => 'max_size[cover,1024]|is_image[cover]|mime_in[cover,image/jpg,image/jpeg,image/png]',
+        'errors' => [
+          'max_size' => 'Cover size is too big',
+          'is_image' => 'Uploaded file is not an image',
+          'mime_in' => 'Uploaded file is not an image',
+
+        ]
+      ]
     ])) {
-      $validation = \Config\Services::validation();
-      return redirect()->to('/komik/edit/'. $this->request->getVar('slug'))->withInput()->with('validation', $validation);
+      return redirect()->to('/komik/edit/'. $this->request->getVar('slug'))->withInput();
     }
+
+    $fileCover = $this->request->getFile('cover');
+
+    if($fileCover->getError() == 4) {
+      $namaCover = $this->request->getVar('oldCover');
+    } else {
+      $namaCover = $fileCover->getRandomName();
+      $fileCover->move('img', $namaCover);
+      unlink('img/'. $this->request->getVar('oldCover'));
+    }
+
+
 
     $slug = url_title($this->request->getVar('title'), '-', true);
     $this->komikModel->save([
@@ -126,7 +179,7 @@ class Komik extends BaseController
       'slug' => $slug,
       'author' => $this->request->getVar('author'), 
       'publisher' => $this->request->getVar('publisher'), 
-      'cover' => $this->request->getVar('cover'), 
+      'cover' => $namaCover, 
     ]);
 
     session()->setFlashData('message', 'Comic updated succesfully.');
