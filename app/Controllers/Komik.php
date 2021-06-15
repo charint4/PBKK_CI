@@ -60,7 +60,7 @@ class Komik extends BaseController
         ]
       ],
       'cover' => [
-        'rules' => 'max_size[cover,1024]|is_image[cover]|mime_in[cover,image/jpg,image/jpeg,image/png]',
+        'rules' => 'max_size[cover,2048]|is_image[cover]|mime_in[cover,image/jpg,image/jpeg,image/png]',
         'errors' => [
           'max_size' => 'Cover size is too big',
           'is_image' => 'Uploaded file is not an image',
