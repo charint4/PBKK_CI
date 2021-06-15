@@ -48,27 +48,30 @@
 <?= $this->section('content'); ?>
 <div class="container">
   <div class="header">
-    <h1 class="welcome text-center my-5">Insert Comic</h1>
+    <h1 class="my-5 text-center welcome">Insert Comic</h1>
     <div class="container">
       <div class="row">
-        <div class="col-md-12 my-3 p-4 content">
+        <div class="p-4 my-3 col-md-12 content">
           <form action="/komik/save" method="post">
             <?= csrf_field(); ?> 
             <div class="mb-3">
               <label for="title" class="form-label">Comic Title</label>
-              <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" autofocus>
+              <input type="text" class="form-control <?= ($validation->hasError('title'))? 'is-invalid' : ''; ?>" id="title" name="title" aria-describedby="emailHelp" autofocus value="<?= old('title'); ?>">
+              <div class="invalid-feedback">
+                <?= $validation->getError('title'); ?>
+              </div>
             </div>
             <div class="mb-3">
               <label for="author" class="form-label">Author</label>
-              <input type="text" class="form-control" id="author" name="author" aria-describedby="emailHelp">
+              <input type="text" class="form-control" id="author" name="author" aria-describedby="emailHelp" value="<?= old('author'); ?>">
             </div>
             <div class="mb-3">
               <label for="publisher" class="form-label">Publisher</label>
-              <input type="text" class="form-control" id="publisher" name="publisher" aria-describedby="emailHelp">
+              <input type="text" class="form-control" id="publisher" name="publisher" aria-describedby="emailHelp" value="<?= old('publisher'); ?>">
             </div>
             <div class="mb-3">
               <label for="cover" class="form-label">Cover</label>
-              <input type="text" class="form-control" id="cover" name="cover" aria-describedby="emailHelp">
+              <input type="text" class="form-control" id="cover" name="cover" aria-describedby="emailHelp" value="<?= old('cover'); ?>">
             </div>
             <button type="submit" class="btn">Submit</button>
           </form>

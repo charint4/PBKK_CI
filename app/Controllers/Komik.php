@@ -14,7 +14,6 @@ class Komik extends BaseController
 
   public function index()
   {
-    // $komik = $this->komikModel->findAll();
 
     $data = [
       'title' => 'Daftar Komik',
@@ -28,7 +27,6 @@ class Komik extends BaseController
 
   public function detail($slug)
   {
-    // $komik = $this->komikModel->getKomik($slug);
     $data = [
       'title' => 'Comic Detail',
       'komik' => $this->komikModel->getKomik($slug),
@@ -45,6 +43,7 @@ class Komik extends BaseController
   {
     $data = [
       'title' => 'Insert Comic Form',
+      'validation' => \Config\Services::validation(),
     ];
 
     return view('komik/create', $data);
@@ -52,6 +51,19 @@ class Komik extends BaseController
 
   public function save()
   {
+    if(!$this->validate([
+      'title' => [
+        'rules' => 'required|is_unique[komik.title]',
+        'errors' => [
+          'required' => 'Comic {field} needs to be filled',
+          'is_unique' => 'Comic {field} must be unique',
+        ]
+      ],
+    ])) {
+      $validation = \Config\Services::validation();
+      return redirect()->to('/komik/create')->withInput()->with('validation', $validation);
+    }
+
     $slug = url_title($this->request->getVar('title'), '-', true);
     $this->komikModel->save([
       'title' => $this->request->getVar('title'), 
