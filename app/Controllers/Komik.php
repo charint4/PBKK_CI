@@ -34,6 +34,35 @@ class Komik extends BaseController
       'komik' => $this->komikModel->getKomik($slug),
     ];
 
+    if(empty($data['komik'])) {
+      throw new \CodeIgniter\Exceptions\PageNotFoundException('Title'. $slug . 'not found');
+    }
+
     return view('komik/detail', $data);
+  }
+
+  public function create()
+  {
+    $data = [
+      'title' => 'Insert Comic Form',
+    ];
+
+    return view('komik/create', $data);
+  }
+
+  public function save()
+  {
+    $slug = url_title($this->request->getVar('title'), '-', true);
+    $this->komikModel->save([
+      'title' => $this->request->getVar('title'), 
+      'slug' => $slug,
+      'author' => $this->request->getVar('author'), 
+      'publisher' => $this->request->getVar('publisher'), 
+      'cover' => $this->request->getVar('cover'), 
+    ]);
+
+    session()->setFlashData('message', 'Comic inserted succesfully.');
+
+    return redirect()->to('/komik');
   }
 }

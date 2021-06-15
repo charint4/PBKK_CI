@@ -42,6 +42,12 @@
   <div class="header">
     <h1 class="welcome text-center my-5">Comic List</h1>
     <div class="container">
+      <?php if(session()->getFlashdata('message')) : ?>
+        <div class="alert alert-success" role="alert">
+          <?= session()->getFlashdata('message'); ?>
+        </div>
+      <?php endif; ?>
+      <a href="/komik/create" class="btn">Insert Comic</a>
       <div class="row">
         <div class="col-md-12 my-3 p-4 content">
           <table class="table">
